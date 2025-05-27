@@ -1,0 +1,82 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package service;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import model.Product;
+
+public class BillingService {
+   private final String FILE_PATH = "data/products.txt";
+
+   public BillingService() {
+      File var1 = new File("data/products.txt");
+
+      try {
+         var1.getParentFile().mkdirs();
+         if (!var1.exists()) {
+            var1.createNewFile();
+         }
+      } catch (IOException var3) {
+         System.out.println("Error initializing data file.");
+      }
+
+   }
+
+   public void addProduct(Product var1) {
+      try {
+         BufferedWriter var2 = new BufferedWriter(new FileWriter("data/products.txt", true));
+
+         try {
+            var2.write(var1.toString());
+            var2.newLine();
+            System.out.println(" Product added successfully.");
+         } catch (Throwable var6) {
+            try {
+               var2.close();
+            } catch (Throwable var5) {
+               var6.addSuppressed(var5);
+            }
+
+            throw var6;
+         }
+
+         var2.close();
+      } catch (IOException var7) {
+         System.out.println(" Error writing to file.");
+      }
+
+   }
+
+   public void listProducts() {
+      try {
+         BufferedReader var1 = new BufferedReader(new FileReader("data/products.txt"));
+
+         try {
+            System.out.println("\n--- Product List ---");
+
+            String var2;
+            while((var2 = var1.readLine()) != null) {
+               String[] var3 = var2.split(",");
+               System.out.printf("Product: %-10s| \n| Price: %.2f| \n| Qty: %d| \n| Tax%%: %.2f| \n| TaxAmt: %.2f| \n| Total: %.2f|\n", var3[0], Double.parseDouble(var3[1]), Integer.parseInt(var3[2]), Double.parseDouble(var3[3]), Double.parseDouble(var3[4]), Double.parseDouble(var3[5]));
+            }
+         } catch (Throwable var5) {
+            try {
+               var1.close();
+            } catch (Throwable var4) {
+               var5.addSuppressed(var4);
+            }
+
+            throw var5;
+         }
+
+         var1.close();
+      } catch (IOException var6) {
+         System.out.println(" Error reading from file.");
+      }
+
+   }
+}
